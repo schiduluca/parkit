@@ -5,6 +5,8 @@ DirectionAnalyzer::DirectionAnalyzer() {
   state.right = false;
   lastState.left = false;
   lastState.right = false;
+  firstState.left = false;
+  firstState.right = false;
   direction = 0;
 }
 

@@ -4,6 +4,7 @@
 #include "DirectionAnalyzer.h"
 #include <SPI.h>
 #include "WifiConnector.h"
+#include "MelodyPlayer.h"
 
 #define TRIGGER 5
 #define ECHO 4
@@ -23,30 +24,19 @@ Thread threadTwo = Thread();
 DirectionAnalyzer directionAnalyzer = DirectionAnalyzer();
 WifiConnector wifiConnector = WifiConnector();
 
-void threadTask() {
+long getDistance(int trigger, int echo) {
 
-  digitalWrite(TRIGGER, LOW);
+  digitalWrite(trigger, LOW);
   delayMicroseconds(2);
 
-  digitalWrite(TRIGGER, HIGH);
+  digitalWrite(trigger, HIGH);
   delayMicroseconds(10);
 
-  digitalWrite(TRIGGER, LOW);
-  durationTwo = pulseIn(ECHO, HIGH);
-  distanceTwo = (durationTwo/2) / 29.1;
-}
+  digitalWrite(trigger, LOW);
+  int duration = (int)pulseIn(echo, HIGH);
+  int distance = (int)(duration/2) / 29.1;
 
-void threadTaskTwo() {
-
-  digitalWrite(TRIGGER2, LOW);
-  delayMicroseconds(2);
-
-  digitalWrite(TRIGGER2, HIGH);
-  delayMicroseconds(10);
-
-  digitalWrite(TRIGGER2, LOW);
-  durationOne = pulseIn(ECHO2, HIGH);
-  distanceOne = (durationOne/2) / 29.1;
+  return distance;
 }
 
 void setup() {
@@ -58,10 +48,6 @@ void setup() {
   connected = false;
   pinMode(TRIGGER, OUTPUT);
   pinMode(ECHO, INPUT);
-  threadOne.onRun(threadTask);
-  threadOne.setInterval(200);
-  threadTwo.onRun(threadTaskTwo);
-  threadTwo.setInterval(200);
   delay(100);
 }
 
@@ -72,9 +58,8 @@ void loop() {
       connected = true;
   }
 
-
-  threadTask();
-  threadTaskTwo();
+  distanceOne = getDistance(TRIGGER, ECHO);
+  distanceTwo = getDistance(TRIGGER2, ECHO2);
   Serial.println(distanceOne);
   Serial.println(distanceTwo);
   directionAnalyzer.captureValue(distanceOne, 1);
@@ -82,18 +67,19 @@ void loop() {
   directionAnalyzer.analyzeDirection();
   int dir = directionAnalyzer.getDirection();
   switch (dir) {
-    case 1:
+    case 2:
     Serial.println("LEFT");
     digitalWrite(SPEAKER, HIGH);
-    delay(50);
+    delay(2000);
     digitalWrite(SPEAKER, LOW);
     wifiConnector.sendRequest("/api/parking/decrement/");
     break;
-    case 2:
+    case 1:
     Serial.println("RIGHT");
     digitalWrite(SPEAKER, HIGH);
-    delay(300);
+    delay(1000);
     digitalWrite(SPEAKER, LOW);
+    delay(1000);    
     wifiConnector.sendRequest("/api/parking/increment/");
 
     break;
