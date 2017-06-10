@@ -87,13 +87,14 @@ void loop() {
   switch (dir) {
     case 1:
     Serial.println("LEFT");
+    wifiConnector.sendRequest("/api/parking/decrement/");
     break;
     case 2:
     Serial.println("RIGHT");
+    wifiConnector.sendRequest("/api/parking/increment/");
+
     break;
   }
-  digitalWrite(SPEAKER, HIGH);
 
   delay(800);
-  digitalWrite(SPEAKER, LOW);
 }
