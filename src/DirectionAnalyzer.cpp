@@ -5,6 +5,10 @@ DirectionAnalyzer::DirectionAnalyzer() {
     valuesOne[i] = -1;
     valuesTwo[i] = -1;
   }
+  state.left = false;
+  state.right = false;
+  lastState.left = false;
+  lastState.right = false;
 }
 
 int DirectionAnalyzer::getDirection() {
@@ -13,26 +17,35 @@ int DirectionAnalyzer::getDirection() {
 
 
 void DirectionAnalyzer::analyzeDirection() {
-  if(valuesOne[0] + 20 < valuesOne[1] && direction == 0) {
-    direction = 1; //LEFT
-  } else
-
-  if(valuesTwo[0] + 20 < valuesTwo[1] && direction == 0) {
-    direction = 2; //RIGHT
-  } else {
-    direction = 0;
+  if (lastState.left && lastState.right && !state.left && state.right) {
+    direction = 2;
+  } else if (lastState.left && lastState.right && state.left && !state.right) {
+    direction = 1;
   }
 }
 
 void DirectionAnalyzer::captureValue(int value, int thread) {
   switch (thread) {
     case 1:
-      valuesOne[1] = valuesOne[0];
-      valuesOne[0] = value;
+      sensorValues.left = value;
+      sensorValues.right = value;
+      if (value < MAX_DISTANCE && value > MIN_DISTANCE) {
+        lastState.left = state.left;
+        state.left = true;
+      } else {
+        lastState.left = state.left;
+        state.left = false;
+      }
     break;
     case 2:
-      valuesTwo[1] = valuesTwo[0];
-      valuesTwo[0] = value;
+      sensorValues.right = value;
+      if (value < MAX_DISTANCE && value > MIN_DISTANCE) {
+        lastState.right = state.right;
+        state.right = true;
+      } else {
+        lastState.right = state.right;
+        state.right = false;
+      }
     break;
   }
 }
