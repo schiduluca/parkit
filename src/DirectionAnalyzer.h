@@ -1,8 +1,6 @@
 #ifndef DIRECTIONANALYZER_H
 #define DIRECTIONANALYZER_H
 
-#include <vector>
-
 const int MAX_DISTANCE = 60;
 const int MIN_DISTANCE = 5;
 
@@ -28,15 +26,9 @@ class DirectionAnalyzer {
 private:
   car_state state;
   car_state lastState;
+  car_state firstState;
   sensor_values sensorValues;
-
-
   int direction;
-
-
-
-  std::vector<int> valuesOne;
-  std::vector<int> valuesTwo;
 
 public:
   DirectionAnalyzer();

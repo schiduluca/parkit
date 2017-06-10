@@ -1,18 +1,15 @@
 #include "DirectionAnalyzer.h"
 
 DirectionAnalyzer::DirectionAnalyzer() {
-  for(int i = 0; i < 2; i++) {
-    valuesOne[i] = -1;
-    valuesTwo[i] = -1;
-  }
   state.left = false;
   state.right = false;
   lastState.left = false;
   lastState.right = false;
+  direction = 0;
 }
 
 int DirectionAnalyzer::getDirection() {
-  return this->direction;
+  return direction;
 }
 
 
@@ -21,6 +18,8 @@ void DirectionAnalyzer::analyzeDirection() {
     direction = 2;
   } else if (lastState.left && lastState.right && state.left && !state.right) {
     direction = 1;
+  } else {
+    direction = 0;
   }
 }
 

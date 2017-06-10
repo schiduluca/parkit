@@ -34,7 +34,6 @@ void threadTask() {
   digitalWrite(TRIGGER, LOW);
   durationTwo = pulseIn(ECHO, HIGH);
   distanceTwo = (durationTwo/2) / 29.1;
-  delay(100);
 }
 
 void threadTaskTwo() {
@@ -48,7 +47,6 @@ void threadTaskTwo() {
   digitalWrite(TRIGGER2, LOW);
   durationOne = pulseIn(ECHO2, HIGH);
   distanceOne = (durationOne/2) / 29.1;
-  delay(100);
 }
 
 void setup() {
@@ -74,10 +72,9 @@ void loop() {
       connected = true;
   }
 
-  wifiConnector.sendRequest("/songs/list/ixZIoLE48dOC9ggv04H7jvgmDVq2");
 
-  threadOne.run();
-  threadTwo.run();
+  threadTask();
+  threadTaskTwo();
   Serial.println(distanceOne);
   Serial.println(distanceTwo);
   directionAnalyzer.captureValue(distanceOne, 1);
@@ -87,14 +84,20 @@ void loop() {
   switch (dir) {
     case 1:
     Serial.println("LEFT");
+    digitalWrite(SPEAKER, HIGH);
+    delay(50);
+    digitalWrite(SPEAKER, LOW);
     wifiConnector.sendRequest("/api/parking/decrement/");
     break;
     case 2:
     Serial.println("RIGHT");
+    digitalWrite(SPEAKER, HIGH);
+    delay(300);
+    digitalWrite(SPEAKER, LOW);
     wifiConnector.sendRequest("/api/parking/increment/");
 
     break;
   }
 
-  delay(800);
+  delay(50);
 }
