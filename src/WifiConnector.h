@@ -2,8 +2,8 @@
 
 class WifiConnector {
 private:
-  const char* ssid     = "luca";
-  const char* password = "123456781";
+  const char* ssid     = "VictorT";
+  const char* password = "13940202";
 
   const char* host = "109.185.158.161";
   const char* streamId   = "....................";

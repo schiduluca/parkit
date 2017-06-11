@@ -18,8 +18,7 @@ long durationTwo, distanceTwo;
 bool connected = false;
 
 
-Thread threadOne = Thread();
-Thread threadTwo = Thread();
+Thread thread = Thread();
 
 DirectionAnalyzer directionAnalyzer = DirectionAnalyzer();
 WifiConnector wifiConnector = WifiConnector();
@@ -34,7 +33,7 @@ long getDistance(int trigger, int echo) {
 
   digitalWrite(trigger, LOW);
   int duration = (int)pulseIn(echo, HIGH);
-  int distance = (int)(duration/2) / 29.1;
+  int distance = (int)(duration*0.034/2);
 
   return distance;
 }
@@ -59,31 +58,44 @@ void loop() {
   }
 
   distanceOne = getDistance(TRIGGER, ECHO);
+  delayMicroseconds(50);
   distanceTwo = getDistance(TRIGGER2, ECHO2);
-  Serial.println(distanceOne);
-  Serial.println(distanceTwo);
+
+  Serial.print(distanceOne);
+  Serial.print("\t");   
+  Serial.print(distanceTwo);
+
   directionAnalyzer.captureValue(distanceOne, 1);
   directionAnalyzer.captureValue(distanceTwo, 2);
   directionAnalyzer.analyzeDirection();
+
+  Serial.print("\t");   
+  Serial.print(directionAnalyzer.getLeftProgress());
+  Serial.print("\t");   
+  Serial.print(directionAnalyzer.getRightProgress());
+
   int dir = directionAnalyzer.getDirection();
   switch (dir) {
     case 2:
+    directionAnalyzer.resetProgress();
     Serial.println("LEFT");
     digitalWrite(SPEAKER, HIGH);
-    delay(2000);
+    delay(200);
     digitalWrite(SPEAKER, LOW);
     wifiConnector.sendRequest("/api/parking/decrement/");
     break;
     case 1:
+    directionAnalyzer.resetProgress();
     Serial.println("RIGHT");
     digitalWrite(SPEAKER, HIGH);
-    delay(1000);
+    delay(100);
     digitalWrite(SPEAKER, LOW);
-    delay(1000);    
+    delay(100);    
     wifiConnector.sendRequest("/api/parking/increment/");
 
     break;
   }
 
-  delay(50);
+  Serial.println();
+  delay(10);
 }
