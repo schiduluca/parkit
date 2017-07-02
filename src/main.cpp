@@ -52,26 +52,26 @@ void setup() {
 
 void loop() {
 
-  if(connected == false) {
-      wifiConnector.initializeConnection();
-      connected = true;
-  }
+  // if(connected == false) {
+  //     wifiConnector.initializeConnection();
+  //     connected = true;
+  // }
 
   distanceOne = getDistance(TRIGGER, ECHO);
   delayMicroseconds(50);
   distanceTwo = getDistance(TRIGGER2, ECHO2);
 
   Serial.print(distanceOne);
-  Serial.print("\t");   
+  Serial.print("\t");
   Serial.print(distanceTwo);
 
   directionAnalyzer.captureValue(distanceOne, 1);
   directionAnalyzer.captureValue(distanceTwo, 2);
   directionAnalyzer.analyzeDirection();
 
-  Serial.print("\t");   
+  Serial.print("\t");
   Serial.print(directionAnalyzer.getLeftProgress());
-  Serial.print("\t");   
+  Serial.print("\t");
   Serial.print(directionAnalyzer.getRightProgress());
 
   int dir = directionAnalyzer.getDirection();
@@ -90,7 +90,7 @@ void loop() {
     digitalWrite(SPEAKER, HIGH);
     delay(100);
     digitalWrite(SPEAKER, LOW);
-    delay(100);    
+    delay(100);
     wifiConnector.sendRequest("/api/parking/increment/");
 
     break;

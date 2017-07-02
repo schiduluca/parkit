@@ -1,7 +1,7 @@
 #ifndef DIRECTIONANALYZER_H
 #define DIRECTIONANALYZER_H
 
-const int MAX_DISTANCE = 100;
+const int MAX_DISTANCE = 30;
 const int MIN_DISTANCE = 5;
 const int LEFT = 1;
 const int RIGHT = 2;
@@ -39,11 +39,10 @@ public:
   DirectionAnalyzer();
   void captureValue(int value, int thread);
   void analyzeDirection();
-  void resetProgress();  
+  void resetProgress();
   int getDirection();
   int getLeftProgress();
   int getRightProgress();
 };
 
 #endif
- 
