@@ -11,7 +11,7 @@ To make the droids work for you, you have to "feed" them with power capsules.
 The capsules have to be extracted from ground, by player or farmer droids.
 
 You can also build walls, and upgrade them for more protection.
-### Enties
+### Entities
 
 Main Player - ![alt text](http://i.imgur.com/jJ19e5r.png)
 
